@@ -2,8 +2,6 @@ import './App.css';
 import { useState } from 'react';
 
 function App() {
-  var id = 0
-  // const [id, setId] = useState(0);
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas'
     }
@@ -24,8 +22,13 @@ function App() {
       name: newName
     };
 
-    setPersons(persons.concat(newPerson));
-    console.log("persons array is now",persons)
+    if(persons.filter((person) => { return person.name === newPerson.name}).length > 0){
+      alert(`${newName} already exists. Try another name.`);
+    }
+    else {
+      setPersons(persons.concat(newPerson));
+      console.log("persons array is now",persons)
+    }
     setNewName("");
   }
 
@@ -41,8 +44,7 @@ function App() {
         </div>
       </form>
       <h2>Numbers</h2>
-      {/* persons.length > 1 && */}
-      {persons.map((person) => <p key={id++}>{person.name}</p>)}
+      {persons.map((person) => <p key={person.name}>{person.name}</p>)}
     </div>
   );
 }
