@@ -2,6 +2,8 @@ import './App.css';
 import { useEffect, useState } from 'react';
 
 function App() {
+  // var filtered = [];
+  const [filtered, setFiltered] = useState([]);
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', phoneNum: '040-123456', id: 1 },
     { name: 'Ada Lovelace', phoneNum: '39-44-5323523', id: 2 },
@@ -21,6 +23,7 @@ function App() {
   const handleSubmit = (e) => {
     console.log("Clicked submit btn")
     e.preventDefault();
+    
 
 
     const newPerson = {
@@ -43,20 +46,23 @@ function App() {
   const searchLogic = (e) => {
     console.log("searchVal is",e.target.value);
     setSearchVal(e.target.value);
+
   }
 
   useEffect(() => {
-    const filtered = persons.filter((person) => {
+
+    const newFiltered = persons.filter((person) => {
       return person.name.startsWith(searchVal);
     })
 
-    if(filtered.length > 0){
-      setPersons(filtered);
+    if(newFiltered.length > 0){
+      setFiltered(newFiltered);
     }
     else {
+      setFiltered([]);
       console.log(`We could not find a user by the name of ${searchVal}`)
     }
-  },[searchVal])
+  },[searchVal,persons])
 
   return (
     <div>
@@ -76,7 +82,7 @@ function App() {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map((person) => <p key={person.name}>{person.name} ---- {person.phoneNum}</p>)}
+      {filtered.length > 0 ? filtered.map((person) => <p key={person.name}>{person.name} ---- {person.phoneNum}</p>) : persons.map((person) => <p key={person.name}>{person.name} ---- {person.phoneNum}</p>)}
     </div>
   );
 }
