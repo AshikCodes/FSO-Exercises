@@ -1,8 +1,11 @@
 import './App.css';
 import { useEffect, useState } from 'react';
+import UserForm from './components/UserForm';
+import SearchField from './components/SearchField';
+import UserList from './components/UserList';
 
 function App() {
-  // var filtered = [];
+
   const [filtered, setFiltered] = useState([]);
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', phoneNum: '040-123456', id: 1 },
@@ -11,78 +14,12 @@ function App() {
     { name: 'Mary Poppendieck', phoneNum: '39-23-6423122', id: 4 }
   ])
 
-  const [newName, setNewName] = useState('')
-  const [newPhone, setNewPhone] = useState('');
-  const [searchVal, setSearchVal] = useState('');
-   
-  const handleChange = (e) => {
-      console.log(e.target.value);
-      setNewName(e.target.value);
-  }
-
-  const handleSubmit = (e) => {
-    console.log("Clicked submit btn")
-    e.preventDefault();
-    
-
-
-    const newPerson = {
-      name: newName,
-      phoneNum: newPhone
-    };
-
-    if(persons.filter((person) => { return person.name === newPerson.name}).length > 0){
-      alert(`${newName} already exists. Try another name.`);
-    }
-    else {
-      setPersons(persons.concat(newPerson));
-      console.log("persons array is now",persons)
-    }
-    setNewName("");
-    setNewPhone("");
-  }
-
-
-  const searchLogic = (e) => {
-    console.log("searchVal is",e.target.value);
-    setSearchVal(e.target.value);
-
-  }
-
-  useEffect(() => {
-
-    const newFiltered = persons.filter((person) => {
-      return person.name.startsWith(searchVal);
-    })
-
-    if(newFiltered.length > 0){
-      setFiltered(newFiltered);
-    }
-    else {
-      setFiltered([]);
-      console.log(`We could not find a user by the name of ${searchVal}`)
-    }
-  },[searchVal,persons])
-
   return (
     <div>
       <h2>Phonebook</h2>
-      <div className="searchfield">
-        filter shown with a <input type="text" value={searchVal} onChange={searchLogic}/>
-      </div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          name: <input value={newName}  onChange={handleChange}/>
-        </div>
-        <div>
-          number: <input value={newPhone}  onChange={(e) => setNewPhone(e.target.value)}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {filtered.length > 0 ? filtered.map((person) => <p key={person.name}>{person.name} ---- {person.phoneNum}</p>) : persons.map((person) => <p key={person.name}>{person.name} ---- {person.phoneNum}</p>)}
+      <SearchField persons={persons} setFiltered={setFiltered}/>
+      <UserForm persons={persons} setPersons={setPersons}/>
+      <UserList filtered={filtered} persons={persons}/>
     </div>
   );
 }
